@@ -13,6 +13,7 @@ Sound Move::checkSound;
 Texture2D Move::whitePromotionTexture;
 Texture2D Move::blackPromotionTexture;
 std::vector<MomentoMove> Move::moveTokens;
+std::unordered_map<std::string, int> Move::positionHistory;
 
 Move::Move(Chessboard& chessboard) : chessboard(chessboard) {
     UndoMove = true;
@@ -76,6 +77,7 @@ void Move::ExecuteMove() {
         chessboard.grid[static_cast<int>(rebornPiece->position.x) + rebornPiece->position.y * 8] = rebornPiece;
     }
     CalculateLegalMoves();
+    CheckThreefoldRepetition();
 }
 
 Move * Move::GetUndoMove(Chessboard& chessboard) {
@@ -174,4 +176,17 @@ bool Move::isKingChecked(){
         }
     }
     return false;
+}
+
+void Move::CheckThreefoldRepetition() {
+    std::string positionKey;
+    for (const auto& piece : chessboard.grid) {
+        if (piece) {
+            positionKey += std::to_string(static_cast<int>(piece->color)) + std::to_string(static_cast<int>(piece->position.x)) + std::to_string(static_cast<int>(piece->position.y));
+        }
+    }
+    positionHistory[positionKey]++;
+    if (positionHistory[positionKey] >= 3) {
+        stalematingMove = true;
+    }
 }

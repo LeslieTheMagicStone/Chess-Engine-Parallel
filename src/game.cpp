@@ -19,6 +19,7 @@ enum class GameStatus {
     whiteWin,
     blackWin,
     STALEMATE,
+    THREEFOLD_REPETITION,
 };
 
 Game::Game(StateMachine& sm) :State(sm) {
@@ -74,6 +75,7 @@ void Game::Update() {
             move->ExecuteMove();
             if (move->winningMove) gameStatus = (ColorTurn == PieceColor::white) ? GameStatus::whiteWin : GameStatus::blackWin;
             if (move->stalematingMove) gameStatus = GameStatus::STALEMATE;
+            if (move->stalematingMove && Move::positionHistory.size() >= 3) gameStatus = GameStatus::THREEFOLD_REPETITION;
             delete move;
             move = nullptr;
             if(undoMovevsAi){
@@ -151,6 +153,9 @@ void Game::GameOver() const {
             break;
         case GameStatus::STALEMATE:
             resultText = "STALEMATE";
+            break;
+        case GameStatus::THREEFOLD_REPETITION:
+            resultText = "THREEFOLD REPETITION";
             break;
         default:
             break;

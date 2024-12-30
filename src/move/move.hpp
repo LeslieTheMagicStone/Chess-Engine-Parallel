@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <memory>
+#include <unordered_map>
 
 class Piece;
 class Chessboard;
@@ -17,6 +18,7 @@ class Move {
     void ExecuteMove();
     static Move* GetUndoMove(Chessboard &chessboard);
     static void SetMoves(const std::array<std::shared_ptr<Piece>,64> &grid, PieceColor color);
+    void CheckThreefoldRepetition();
 
     bool winningMove = false;
     bool stalematingMove = false;
@@ -30,6 +32,7 @@ class Move {
     static Texture2D whitePromotionTexture;
     static Texture2D blackPromotionTexture;
     static std::vector<MomentoMove> moveTokens;
+    static std::unordered_map<std::string, int> positionHistory;
 
    private:
     explicit Move(Chessboard& chessboard);//undo move
