@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <chrono>
+#include <omp.h>
 
 #include "raymath.h"
 #include "../chessboard/chessboard.hpp"

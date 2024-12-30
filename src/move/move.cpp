@@ -1,6 +1,7 @@
 #include "move.hpp"
 
 #include <raymath.h>
+#include <algorithm>
 
 #include "../chessboard/chessboard.hpp"
 #include "../pieces/factory/piece_factory.hpp"

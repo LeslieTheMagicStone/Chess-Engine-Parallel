@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 
 #define ORTHOGONAL_MOVES \
     {1, 0}, {0, 1}, {-1, 0}, { 0, -1 }

@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <thread>
+#include <algorithm>
 
 #include "ChessAI/ChessAI.hpp"
 #include "chessboard/chessboard.hpp"
