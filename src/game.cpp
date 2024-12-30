@@ -41,7 +41,7 @@ void Game::HandleInput() {
         const int x = GetMouseX() / cellSize;
         const int y = GetMouseY() / cellSize;
         const bool isOwnPieceClick = chessboard.grid[x + y * 8].get() && (chessboard.grid[x + y * 8]->color == ColorTurn);
-        const bool isLegalMove = (clickedPiece && std::ranges::any_of(clickedPiece->legalMoves, [&](auto move) {
+        const bool isLegalMove = (clickedPiece && std::any_of(clickedPiece->legalMoves.begin(), clickedPiece->legalMoves.end(), [&](auto move) {
             return Vector2Equals(move, {static_cast<float>(x), static_cast<float>(y)});
         }));
 

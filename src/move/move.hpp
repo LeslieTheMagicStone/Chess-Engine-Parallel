@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 class Piece;
 class Chessboard;
