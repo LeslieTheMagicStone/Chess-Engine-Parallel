@@ -1,6 +1,8 @@
 #include "ChessAI.hpp"
 
 #include <unordered_map>
+#include <iostream>
+#include <chrono>
 
 #include "raymath.h"
 #include "../chessboard/chessboard.hpp"
@@ -14,6 +16,8 @@ ChessAI::ChessAI(PieceColor colorAI) : colorAI(colorAI) {}
 ChessAI::~ChessAI() =default;
 
 Move* ChessAI::GetMove(Chessboard& chessboard) const {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::array<std::shared_ptr<Piece>, 64> GridCoppy;
     for (int i = 0; i < chessboard.grid.size(); i++) {
         GridCoppy[i] = chessboard.grid[i] ? chessboard.grid[i]->clone() : nullptr;
@@ -25,10 +29,15 @@ Move* ChessAI::GetMove(Chessboard& chessboard) const {
             for (int i = 0; i < p->legalMoves.size(); i++) {
                 const Vector2 from = {p->position.x, p->position.y};
                 const float score = CalculateMove(from, p->legalMoves[i], GridCoppy, colorAI);
-                max_bestMove = {score, from, p->legalMoves[i]};  // assing if the score is better
+                max_bestMove = {score, from, p->legalMoves[i]};  // assign if the score is better
             }
         }
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "AI move calculation time: " << elapsed.count() << " seconds" << std::endl;
+
     return new Move(max_bestMove.value.from, max_bestMove.value.to, chessboard);
 }
 
@@ -40,7 +49,7 @@ float ChessAI::CalculateMove(const Vector2 from, const Vector2 to, std::array<st
     const PieceColor enemyColor = (colorTurn == PieceColor::white) ? PieceColor::black : PieceColor::white;
     std::shared_ptr<Piece> pieceCaptured = std::move(grid[indexTo]);
     if (pieceCaptured) score += static_cast<float>(pieceCaptured->getValue());
-    if (depth == 2) return score;
+    if (depth == 3) return score;
 
     std::unordered_map<int, std::vector<Vector2>> legalMovesMap;
     for (int i = 0; i < grid.size(); i++) {
