@@ -20,14 +20,14 @@ Move* ChessAI::GetMove(Chessboard& chessboard) const {
     auto start = std::chrono::high_resolution_clock::now();
 
     std::array<std::shared_ptr<Piece>, 64> GridCoppy;
-    for (int i = 0; i < chessboard.grid.size(); i++) {
+    for (int i = 0; i < (int)chessboard.grid.size(); i++) {
         GridCoppy[i] = chessboard.grid[i] ? chessboard.grid[i]->clone() : nullptr;
     }
 
     Max_BestMove max_bestMove;
     for (const auto &p : GridCoppy) {
         if (p && p->color == colorAI) {
-            for (int i = 0; i < p->legalMoves.size(); i++) {
+            for (int i = 0; i < (int)p->legalMoves.size(); i++) {
                 const Vector2 from = {p->position.x, p->position.y};
                 const float score = CalculateMove(from, p->legalMoves[i], GridCoppy, colorAI);
                 max_bestMove = {score, from, p->legalMoves[i]};  // assign if the score is better
@@ -53,7 +53,7 @@ float ChessAI::CalculateMove(const Vector2 from, const Vector2 to, std::array<st
     if (depth == 3) return score;
 
     std::unordered_map<int, std::vector<Vector2>> legalMovesMap;
-    for (int i = 0; i < grid.size(); i++) {
+    for (int i = 0; i < (int)grid.size(); i++) {
         if (grid[i] && grid[i]->color == enemyColor) {
             legalMovesMap[i] = std::move(grid[i]->legalMoves);
         }
@@ -64,7 +64,7 @@ float ChessAI::CalculateMove(const Vector2 from, const Vector2 to, std::array<st
 
     Move::SetMoves(grid, enemyColor);
 
-    if (bool NoPossibleMoves = std::all_of(&grid[0], &grid[64], [colorTurn](auto p) { return !p || p->color == colorTurn || p->legalMoves.empty(); })) {
+    if (std::all_of(&grid[0], &grid[64], [colorTurn](auto p) { return !p || p->color == colorTurn || p->legalMoves.empty(); })) {
         for (const auto &p : grid) {
             if (p && p->color == enemyColor && p->getValue() == 100) {
                 if (std::static_pointer_cast<King>(p)->isGettingAtack(grid)) score += 1000;
@@ -73,7 +73,7 @@ float ChessAI::CalculateMove(const Vector2 from, const Vector2 to, std::array<st
         }
     } else {
         float TheWortsScenario = -1000;
-        for (int i = 0; i < grid.size(); i++) {
+        for (int i = 0; i < (int)grid.size(); i++) {
             auto p = grid[i];
             if (p && p->color == enemyColor) {
                 for (auto& to : p->legalMoves) {

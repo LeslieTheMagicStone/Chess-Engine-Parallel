@@ -1,3 +1,5 @@
+#include <memory>
+
 #pragma once
 #include <memory>
 class StateMachine;
