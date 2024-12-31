@@ -16,7 +16,11 @@ PieceFactory& Piece::Create() { return PieceFactory::Get(); }
 
 bool Piece::isInsideBoard(int x, int y) { return x < 8 && y < 8 && x >= 0 && y >= 0; }
 
-void Piece::addLegalMove(const int x, const int y) { legalMoves.push_back({static_cast<float>(x), static_cast<float>(y)}); }
+void Piece::addLegalMove(const int x, const int y) { 
+    if (!isInsideBoard(x, y)) {
+        return;
+    } ;
+legalMoves.push_back({static_cast<float>(x), static_cast<float>(y)}); }
 
 bool Piece::SafeMove(int x, int y, std::array<std::shared_ptr<Piece>,64> grid) {
     const std::shared_ptr<Piece> tempCaptured = grid[x+y*8];
